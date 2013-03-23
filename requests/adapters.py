@@ -239,6 +239,14 @@ class HTTPAdapter(BaseAdapter):
                     decode_content=False
                 )
 
+            r = self.build_response(request, resp)
+
+            if not stream:
+                r.content
+
+        except socket.timeout as socktimeouterr:
+            raise Timeout(socktimeouterr)
+
         except socket.error as sockerr:
             raise ConnectionError(sockerr)
 
@@ -252,10 +260,5 @@ class HTTPAdapter(BaseAdapter):
                 raise Timeout(e)
             else:
                 raise
-
-        r = self.build_response(request, resp)
-
-        if not stream:
-            r.content
 
         return r
